@@ -14,6 +14,25 @@ class MoviesController < ApplicationController
     @movies = Movie.all
   end
 
+  def sort_by_title
+    flash[:title] = 1
+    flash[:date] = 0
+    @movies = Movie.order(:title)
+    render "index"
+  end
+
+  def sort_by_rating
+    @movies = Movie.order(:rating)
+    render "index"
+  end
+
+  def sort_by_date
+    flash[:date] = 1
+    flash[:title] = 0
+    @movies = Movie.order(:release_date)
+    render "index"
+  end
+
   def new
     # default: render 'new' template
   end

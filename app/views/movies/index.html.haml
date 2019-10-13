@@ -4,9 +4,18 @@
 %table#movies.table.table-striped.col-md-12
   %thead
     %tr
-      %th Movie Title
+      -if flash[:title] == 1
+        %th.bg-warning <a id="title_header" href='/sort-by-title'> Movie Title </a>
+      -else
+        %th <a id="title_header" href='/sort-by-title'> Movie Title </a>
+
       %th Rating
-      %th Release Date
+
+      -if flash[:date] == 1
+        %th.bg-warning <a id="release_date_header" href='/sort-by-date'> Release Date </a>
+      -else
+        %th <a id="release_date_header" href='/sort-by-date'> Release Date </a>
+
       %th More Info
   %tbody
     - @movies.each do |movie|
