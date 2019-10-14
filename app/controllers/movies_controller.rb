@@ -11,6 +11,9 @@ class MoviesController < ApplicationController
   end
 
   def index
+    puts "params are"
+    puts params
+
     @all_ratings = ['G','PG','PG-13','R']
 
     if params['ratings']
@@ -30,11 +33,9 @@ class MoviesController < ApplicationController
       @movies = Movie.order(:release_date)
       session[:order_by] = :release_date
     elsif session[:order_by] == 'title'
-      @order_by = :title
-      @movies = Movie.order(:title)
+      redirect_to movies_path(:order_by => :title, :ratings => @selected_ratings)
     elsif session[:order_by] == 'release_date'
-      @order_by = :release_date
-      @movies = Movie.order(:release_date)
+      redirect_to movies_path(:order_by => :release_date, :ratings => @selected_ratings)
     else
       @movies = Movie.all
     end
