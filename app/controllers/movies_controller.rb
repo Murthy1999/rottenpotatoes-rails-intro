@@ -14,16 +14,13 @@ class MoviesController < ApplicationController
     if params['ratings'] != nil
       session[:selected_ratings] = params['ratings'].keys
     end
-
     @all_ratings = ['G','PG','PG-13','R']
     @selected_ratings = ['G','PG','PG-13','R']
-
     if session[:already_visited]
       @selected_ratings = session[:selected_ratings] || []
     else
       session[:already_visited] = true
     end
-
     @movies = Movie.all
   end
 
