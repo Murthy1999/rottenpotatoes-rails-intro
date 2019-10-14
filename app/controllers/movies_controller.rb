@@ -12,18 +12,27 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = ['G','PG','PG-13','R']
-    @selected_ratings = ['G','PG','PG-13','R']
+
     if params['ratings']
-      session[:selected_ratings] = params['ratings']
-      @selected_ratings = params['ratings']
+      @selected_ratings = session[:selected_ratings] = params['ratings']
     elsif session[:selected_ratings]
       @selected_ratings = session[:selected_ratings]
+    else
+      @selected_ratings = ['G','PG','PG-13','R']
     end
 
-    if params['order_by'] == 'title' or session[:order_by] == 'title'
+    if params[:order_by] == 'title'
       @order_by = :title
       @movies = Movie.order(:title)
-    elsif params['order_by'] == 'release_date' or session[:order_by] == 'release_date'
+      session[:order_by] = :title
+    elsif params[:order_by] == 'release_date'
+      @order_by = :release_date
+      @movies = Movie.order(:release_date)
+      session[:order_by] = :release_date
+    elsif session[:order_by] == 'title'
+      @order_by = :title
+      @movies = Movie.order(:title)
+    elsif session[:order_by] == 'release_date'
       @order_by = :release_date
       @movies = Movie.order(:release_date)
     else
@@ -31,23 +40,8 @@ class MoviesController < ApplicationController
     end
   end
 
-  def sort_by_title
-    session[:order_by] = :title
-    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings])
-  end
-
-  def sort_by_date
-    session[:order_by] = :release_date
-    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings])
-  end
-
   def new
     # default: render 'new' template
-  end
-
-  def update_ratings
-    puts 'Updated ratings!'
-    redirect_to movies_path(:order_by => session[:order_by], :ratings => params['ratings'])
   end
 
   def create
