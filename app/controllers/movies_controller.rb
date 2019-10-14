@@ -11,25 +11,51 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params['ratings'] != nil
+      session[:selected_ratings] = params['ratings'].keys
+    end
+
+    @all_ratings = ['G','PG','PG-13','R']
+    @selected_ratings = ['G','PG','PG-13','R']
+
+    if session[:already_visited]
+      @selected_ratings = session[:selected_ratings] || []
+    else
+      session[:already_visited] = true
+    end
+
     @movies = Movie.all
   end
 
   def sort_by_title
     flash[:title] = 1
     flash[:date] = 0
+    @selected_ratings = session[:selected_ratings] || []
+    @all_ratings = ['G','PG','PG-13','R']
     @movies = Movie.order(:title)
-    render "index"
-  end
-
-  def sort_by_rating
-    @movies = Movie.order(:rating)
-    render "index"
+    filtered = []
+    @movies.each do |movie|
+      if @selected_ratings.include?(movie.rating)
+        filtered.append(movie)
+      end
+    end
+    @movies = filtered
+    render 'index'
   end
 
   def sort_by_date
     flash[:date] = 1
     flash[:title] = 0
+    @selected_ratings = session[:selected_ratings] || []
+    @all_ratings = ['G','PG','PG-13','R']
     @movies = Movie.order(:release_date)
+    filtered = []
+    @movies.each do |movie|
+      if @selected_ratings.include?(movie.rating)
+        filtered.append(movie)
+      end
+    end
+    @movies = filtered
     render "index"
   end
 

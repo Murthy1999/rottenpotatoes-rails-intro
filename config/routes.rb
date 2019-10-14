@@ -6,7 +6,6 @@ Rails.application.routes.draw do
   root 'movies#index'
 
   get '/sort-by-title', to: 'movies#sort_by_title'
-  get '/sort-by-rating', to: 'movies#sort_by_rating'
   get '/sort-by-date', to: 'movies#sort_by_date'
 
   # Example of regular route:
