@@ -13,14 +13,14 @@
 %table#movies.table.table-striped.col-md-12
   %thead
     %tr
-      -if flash[:title] == 1
+      -if @order_by == :title
         %th.bg-warning.hilite <a id="title_header" href='/sort-by-title'> Movie Title </a>
       -else
         %th <a id="title_header" href='/sort-by-title'> Movie Title </a>
 
       %th Rating
 
-      -if flash[:release_date] == 1
+      -if @order_by == :release_date
         %th.bg-warning.hilite <a id="release_date_header" href='/sort-by-date'> Release Date </a>
       -else
         %th <a id="release_date_header" href='/sort-by-date'> Release Date </a>

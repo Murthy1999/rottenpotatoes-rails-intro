@@ -20,47 +20,25 @@ class MoviesController < ApplicationController
       @selected_ratings = session[:selected_ratings]
     end
 
-    puts params
-    puts '--------------------'
-    puts session
-    puts '--------------------'
-    puts session[:order_by]
-
     if params['order_by'] == 'title' or session[:order_by] == 'title'
-      puts 'a'
-      flash[:title] = 1
-      flash[:release_date] = 0
+      @order_by = :title
       @movies = Movie.order(:title)
     elsif params['order_by'] == 'release_date' or session[:order_by] == 'release_date'
-      puts 'b'
-      flash[:title] = 0
-      flash[:release_date] = 1
+      @order_by = :release_date
       @movies = Movie.order(:release_date)
     else
-      puts 'c'
       @movies = Movie.all
     end
   end
 
-  # flash[:title] = 1
-  # flash[:date] = 0
-  # @movies = Movie.order(:title)
-  # filtered = []
-  # @movies.each do |movie|
-  #   if @selected_ratings.include?(movie.rating)
-  #     filtered.append(movie)
-  #   end
-  # end
-  # @movies = filtered
-
   def sort_by_title
     session[:order_by] = :title
-    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings])
+    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings].keys)
   end
 
   def sort_by_date
     session[:order_by] = :release_date
-    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings])
+    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings].keys)
   end
 
   def new
