@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get '/sort-by-title', to: 'movies#sort_by_title'
   get '/sort-by-date', to: 'movies#sort_by_date'
+  get '/update-ratings', to: 'movies#update_ratings'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

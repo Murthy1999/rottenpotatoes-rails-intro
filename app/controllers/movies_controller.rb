@@ -11,37 +11,35 @@ class MoviesController < ApplicationController
   end
 
   def index
-    puts params
     @all_ratings = ['G','PG','PG-13','R']
     @selected_ratings = ['G','PG','PG-13','R']
     if params['ratings']
-      puts 'params ratings present'
       session[:selected_ratings] = params['ratings']
       @selected_ratings = params['ratings']
     elsif session[:selected_ratings]
-      puts 'session ratings present'
       @selected_ratings = session[:selected_ratings]
     end
 
+    puts params
+    puts '--------------------'
+    puts session
+    puts '--------------------'
+    puts session[:order_by]
 
-    if params['order_by'] == 'title' or session[:order_by] == :title
-      puts 1
+    if params['order_by'] == 'title' or session[:order_by] == 'title'
+      puts 'a'
       flash[:title] = 1
       flash[:release_date] = 0
       @movies = Movie.order(:title)
-    elsif params['order_by'] == 'release_date'
-      puts 2
+    elsif params['order_by'] == 'release_date' or session[:order_by] == 'release_date'
+      puts 'b'
       flash[:title] = 0
       flash[:release_date] = 1
       @movies = Movie.order(:release_date)
     else
-      puts 3
+      puts 'c'
       @movies = Movie.all
     end
-
-    puts "params are"
-    puts params
-
   end
 
   # flash[:title] = 1
@@ -61,11 +59,17 @@ class MoviesController < ApplicationController
   end
 
   def sort_by_date
-    redirect_to movies_path(:order_by => 'release_date')
+    session[:order_by] = :release_date
+    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings])
   end
 
   def new
     # default: render 'new' template
+  end
+
+  def update_ratings
+    puts 'Updated ratings!'
+    redirect_to movies_path(:order_by => session[:order_by], :ratings => params['ratings'])
   end
 
   def create
