@@ -11,49 +11,55 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params['ratings'] != nil
-      session[:selected_ratings] = params['ratings'].keys
-    end
     @all_ratings = ['G','PG','PG-13','R']
-    @selected_ratings = ['G','PG','PG-13','R']
-    if session[:already_visited]
-      @selected_ratings = session[:selected_ratings] || []
+
+    if params['ratings'] != nil
+      puts "Here-1"
+      puts params['ratings']
+      @selected_ratings = session[:selected_ratings] = params['ratings'].keys
+    elsif session[:is_redirect]
+      puts 'a'
+      @selected_ratings = session[:selected_ratings]
+      
+      if session[:sort_by_title]
+        @movies = Movie.order :title
+      elsif session[:sort_by_date]
+        @movies = Movie.order :release_date
+      else
+
+      end
     else
-      session[:already_visited] = true
+      puts 'b'
+      @selected_ratings = ['G','PG','PG-13','R']
     end
-    @movies = Movie.all
+
+    if @movies == nil
+      @movies = Movie.all
+    end
+
   end
 
+  # flash[:title] = 1
+  # flash[:date] = 0
+  # @movies = Movie.order(:title)
+  # filtered = []
+  # @movies.each do |movie|
+  #   if @selected_ratings.include?(movie.rating)
+  #     filtered.append(movie)
+  #   end
+  # end
+  # @movies = filtered
+
   def sort_by_title
-    flash[:title] = 1
-    flash[:date] = 0
-    @selected_ratings = session[:selected_ratings] || []
-    @all_ratings = ['G','PG','PG-13','R']
-    @movies = Movie.order(:title)
-    filtered = []
-    @movies.each do |movie|
-      if @selected_ratings.include?(movie.rating)
-        filtered.append(movie)
-      end
-    end
-    @movies = filtered
-    render 'index'
+    session[:is_redirect] = true
+    session[:sort_by_title] = true
+    redirect_to movies_path
   end
 
   def sort_by_date
-    flash[:date] = 1
-    flash[:title] = 0
-    @selected_ratings = session[:selected_ratings] || []
-    @all_ratings = ['G','PG','PG-13','R']
-    @movies = Movie.order(:release_date)
-    filtered = []
-    @movies.each do |movie|
-      if @selected_ratings.include?(movie.rating)
-        filtered.append(movie)
-      end
-    end
-    @movies = filtered
-    render "index"
+    session[:is_redirect] = true
+    session[:sort_by_date] = true
+    redirect_to movies_path
   end
 
   def new
