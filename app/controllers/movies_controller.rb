@@ -11,31 +11,36 @@ class MoviesController < ApplicationController
   end
 
   def index
+    puts params
     @all_ratings = ['G','PG','PG-13','R']
-
-    if params['ratings'] != nil
-      puts "Here-1"
-      puts params['ratings']
-      @selected_ratings = session[:selected_ratings] = params['ratings'].keys
-    elsif session[:is_redirect]
-      puts 'a'
+    @selected_ratings = ['G','PG','PG-13','R']
+    if params['ratings']
+      puts 'params ratings present'
+      session[:selected_ratings] = params['ratings']
+      @selected_ratings = params['ratings']
+    elsif session[:selected_ratings]
+      puts 'session ratings present'
       @selected_ratings = session[:selected_ratings]
-      
-      if session[:sort_by_title]
-        @movies = Movie.order :title
-      elsif session[:sort_by_date]
-        @movies = Movie.order :release_date
-      else
-
-      end
-    else
-      puts 'b'
-      @selected_ratings = ['G','PG','PG-13','R']
     end
 
-    if @movies == nil
+
+    if params['order_by'] == 'title' or session[:order_by] == :title
+      puts 1
+      flash[:title] = 1
+      flash[:release_date] = 0
+      @movies = Movie.order(:title)
+    elsif params['order_by'] == 'release_date'
+      puts 2
+      flash[:title] = 0
+      flash[:release_date] = 1
+      @movies = Movie.order(:release_date)
+    else
+      puts 3
       @movies = Movie.all
     end
+
+    puts "params are"
+    puts params
 
   end
 
@@ -51,15 +56,12 @@ class MoviesController < ApplicationController
   # @movies = filtered
 
   def sort_by_title
-    session[:is_redirect] = true
-    session[:sort_by_title] = true
-    redirect_to movies_path
+    session[:order_by] = :title
+    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings])
   end
 
   def sort_by_date
-    session[:is_redirect] = true
-    session[:sort_by_date] = true
-    redirect_to movies_path
+    redirect_to movies_path(:order_by => 'release_date')
   end
 
   def new

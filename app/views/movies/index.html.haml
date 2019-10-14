@@ -20,7 +20,7 @@
 
       %th Rating
 
-      -if flash[:date] == 1
+      -if flash[:release_date] == 1
         %th.bg-warning.hilite <a id="release_date_header" href='/sort-by-date'> Release Date </a>
       -else
         %th <a id="release_date_header" href='/sort-by-date'> Release Date </a>
