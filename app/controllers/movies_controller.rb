@@ -33,12 +33,12 @@ class MoviesController < ApplicationController
 
   def sort_by_title
     session[:order_by] = :title
-    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings].keys)
+    redirect_to movies_path(:order_by => 'title', :ratings => session[:selected_ratings])
   end
 
   def sort_by_date
     session[:order_by] = :release_date
-    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings].keys)
+    redirect_to movies_path(:order_by => 'release_date', :ratings => session[:selected_ratings])
   end
 
   def new
