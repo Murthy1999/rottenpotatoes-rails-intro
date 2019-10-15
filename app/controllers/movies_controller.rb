@@ -21,7 +21,7 @@ class MoviesController < ApplicationController
     elsif session[:selected_ratings]
       @selected_ratings = session[:selected_ratings]
     else
-      @selected_ratings = ['G','PG','PG-13','R']
+      redirect_to movies_path(:ratings => @all_ratings)
     end
 
     if params[:order_by] == 'title'
